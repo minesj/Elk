@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="currency_list">
+        <item>人民币</item>
+        <item>欧元</item>
+        <item>美元</item>
+        <item>日元</item>
+        <item>A</item>
+        <item>S</item>
+        <item>D</item>
+        <item>F</item>
+        <item>Q</item>
+        <item>H</item>
+        <item>S</item>
+        <item>W</item>
+        <item>Wa</item>
+        <item>Ws</item>
+    </string-array>
+</resources>

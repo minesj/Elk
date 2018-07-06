@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#242931"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/close"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:background="#242931"
+            android:src="@drawable/ic_close" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="#242931"
+            android:gravity="center"
+            android:paddingRight="50dp"
+            android:text="设置"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+
+
+    <View
+        android:layout_width="328dp"
+        android:layout_height="0.5dp"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:background="#1AFFFFFF" />
+
+    <Button
+        android:id="@+id/attntions"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="#242931"
+        android:gravity="center"
+        android:text="在微博上关注我们"
+        android:textColor="#B3ffffff" />
+
+    <View
+        android:layout_width="328dp"
+        android:layout_height="0.5dp"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:background="#1AFFFFFF" />
+
+    <Button
+        android:id="@+id/evalution"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="#242931"
+        android:gravity="center"
+        android:text="评价我们"
+        android:textColor="#B3ffffff" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:gravity="center"
+            android:text="旅行货币面额速查"
+            android:textColor="#B3ffffff"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:gravity="center"
+            android:text="v1.5"
+            android:textColor="#B3ffffff"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+
+</LinearLayout>

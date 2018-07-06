@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="360dp"
+    android:layout_height="match_parent"
+    android:background="#242931"
+    >
+
+
+    <LinearLayout
+        android:id="@+id/top_layout"
+        android:layout_width="360dp"
+        android:layout_height="63.4dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#242931">
+        <ImageButton
+            android:id="@+id/setting"
+            android:src="@drawable/ic_setting"
+            android:layout_width="56dp"
+            android:layout_height="63.4dp"
+            android:background="#80000000"
+            android:paddingBottom="11dp"
+            android:paddingTop="12dp"
+            android:layout_gravity="center"
+            />
+        <TextView
+            android:id="@+id/left_change"
+            android:layout_width="124dp"
+            android:layout_height="63.4dp"
+            android:background="#80000000"
+            android:text="USD"
+            android:textSize="28sp"
+            android:gravity="center_vertical"
+            android:textColor="#E95852"
+            android:paddingLeft="30dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#393E46">
+        <ImageButton
+            android:id="@+id/arrow"
+            android:src="@drawable/ic_arrow"
+            android:layout_width="20dp"
+            android:layout_height="63.4dp"
+            android:background="#80000000"
+            android:paddingLeft="-12dp"
+            />
+
+        <TextView
+            android:id="@+id/right_change"
+            android:layout_width="104dp"
+            android:layout_height="63.4dp"
+            android:background="#80000000"
+            android:gravity="center_vertical"
+            android:text="CNY"
+            android:textSize="28sp"
+            android:textColor="#FDA63D"
+            android:paddingLeft="10dp"
+
+            />
+
+        <ImageButton
+            android:id="@+id/share"
+            android:layout_height="63.4dp"
+            android:layout_width="56dp"
+            android:src="@drawable/ic_share"
+            android:background="#80000000"
+            android:paddingBottom="11dp"
+            android:paddingTop="12dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <ListView
+        android:id="@+id/back_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top_layout"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        />
+
+    <ListView
+        android:id="@+id/front_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top_layout"
+        android:background="@android:color/transparent"
+        android:divider="@null"
+        android:dividerHeight="0dp" />
+
+    <include
+        android:id="@+id/aaaaa"
+        layout="@layout/guideview"
+        />
+
+
+</RelativeLayout>
