@@ -20,7 +20,7 @@
         android:orientation="vertical"
         android:layout_centerInParent="true">
         <TextView
-            android:id="@+id/text1"
+            android:id="@+id/listheadtext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"

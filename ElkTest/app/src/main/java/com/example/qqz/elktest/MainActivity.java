@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -27,11 +28,11 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.qqz.elktest.Adapter.BackListAdapter;
-import com.example.qqz.elktest.Adapter.FrontListAdapter;
-import com.example.qqz.elktest.View.Rotate3dAnimation;
-import com.example.qqz.elktest.View.SelectPicPopupLeftWindow;
-import com.example.qqz.elktest.View.SelectPicPopupRightWindow;
+import com.example.qqz.elktest.adapter.BackListAdapter;
+import com.example.qqz.elktest.adapter.FrontListAdapter;
+import com.example.qqz.elktest.view.Rotate3dAnimation;
+import com.example.qqz.elktest.view.SelectPicPopupLeftWindow;
+import com.example.qqz.elktest.view.SelectPicPopupRightWindow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,11 +70,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int variable = 1;
     private int num;
     private int clickItem;
-
-
     private int startx;
     private int starty;
-
     private View maskView;
 
     @Override
@@ -108,14 +106,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         frontListView.setOnItemClickListener(new OnFrontListViewItemClickedListener());
         frontListView.setOnTouchListener(new OnFrontListViewTouchListener());
-
-
         maskView = findViewById(R.id.maskview);
-
         remindLeft = findViewById(R.id.guideLeft);
         remindRight = findViewById(R.id.guideright);
         remindCenter = findViewById(R.id.guidecenter);
-        remindLeftText = findViewById(R.id.text1);
+        remindLeftText = findViewById(R.id.listheadtext);
         remindRightText = findViewById(R.id.text2);
         remindCenterText = findViewById(R.id.text3);
         finshRemind = findViewById(R.id.text4);
@@ -320,12 +315,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     int requestCode = 1;
                     Intent intent = new Intent();
                     intent.setClass(MainActivity.this, CurrencyListLeftActivity.class);
+                    intent.putExtra(CurrencyListLeftActivity.EXTRA_KEY_CURRENCY_SELECTED_CURRENCY,leftSettingTextview.getText());
+                    ArrayList<String> currencies = new ArrayList<>();
+                    currencies.add(leftSettingTextview.getText().toString());
+                    currencies.add(rightSettingTextview.getText().toString());
+                    intent.putStringArrayListExtra(
+                            CurrencyListLeftActivity.EXTRA_KEY_SELECTED_CURRENCIES, currencies);
                     startActivityForResult(intent, requestCode);
                     break;
                 case R.id.changerightmore:
                     int requestCode1 = 2;
                     Intent intent1 = new Intent();
                     intent1.setClass(MainActivity.this, CurrencyListRightActivity.class);
+                    intent1.putExtra(CurrencyListLeftActivity.EXTRA_KEY_CURRENCY_SELECTED_CURRENCY,rightSettingTextview.getText());
+                    ArrayList<String> currencies1 = new ArrayList<>();
+                    currencies1.add(leftSettingTextview.getText().toString());
+                    currencies1.add(rightSettingTextview.getText().toString());
+                    intent1.putStringArrayListExtra(
+                            CurrencyListLeftActivity.EXTRA_KEY_SELECTED_CURRENCIES, currencies1);
                     startActivityForResult(intent1, requestCode1);
                     break;
                 case R.id.leftcancel:
@@ -338,7 +345,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
             }
         }
-
     };
 
     @Override
@@ -355,7 +361,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             rightSettingTextview.setGravity(Gravity.CENTER_VERTICAL);
             menuRightWindow.dismiss();
         }
-
     }
 
     private void fillFrontListView() {
@@ -370,11 +375,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void fillBackListview() {
         backListData = new ArrayList<>(9);
         //backListData.clear();
-            clickItem = Integer.parseInt((String) frontListAdapter.getItem(expandPosition));
-            for (int i = 1; i <= 9; i++) {
-                num = clickItem + variable;
-                backListData.add(String.valueOf(num));
-                clickItem = clickItem + variable;
+        clickItem = Integer.parseInt((String) frontListAdapter.getItem(expandPosition));
+        for (int i = 1; i <= 9; i++) {
+            num = clickItem + variable;
+            backListData.add(String.valueOf(num));
+            clickItem = clickItem + variable;
             backListAdapter.setData(backListData);
             backListAdapter.notifyDataSetChanged();
         }
@@ -482,7 +487,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onKeyDown(keyCode, event);
     }
 
-
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
@@ -496,72 +500,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 int movex = (int) ev.getRawX();
                 int dx = movex - startx;
                 List<String> dataChange = new ArrayList<>();
-                List<String> dataBackChange = new ArrayList<>();
 
                 boolean isLeft = false;
                 for (int i = 0; i <= FRONT_LIST_LENGTH; i++) {
-                    /*ViewGroup leftView = (ViewGroup) frontListView.getChildAt(i);
-                    ViewGroup rightView = (ViewGroup) frontListView.getChildAt(i);
-                    TextView FrontLeftTextview = leftView.findViewById(R.id.front_item_left_layout);
-                    TextView FrontRightTextview = rightView.findViewById(R.id
-                            .front_item_right_layout);*/
                     if (dx < dp2px(this, -30) || dx > dp2px(this, 30)) {
                         return true;
                     } else if (dx > dp2px(this, 20)) {
-                       /* String leftData = (String) FrontLeftTextview.getText();
-                        String rightData = (String) FrontRightTextview.getText();*/
+
                         isLeft = true;
                         String leftData = (String) frontListAdapter.getItem(i);
                         int leftChangeData = (int) (Float.valueOf(leftData) * 10);
                         dataChange.add(String.valueOf(leftChangeData));
-                        if(i != FRONT_LIST_LENGTH){
-                            String leftBackData = (String) backListAdapter.getItem(i);
-                            // frontListView.getChildAt(i).setTranslationX(dx);
-                            int leftBackChangeData = (int) (Float.valueOf(leftBackData) * 10);
-                            dataBackChange.add(String.valueOf(leftBackChangeData));
-                        }
-                        //int rightChangeData = (int) (Float.valueOf(rightData) * 10);
-                     /*   if (!backListData.isEmpty()) {
-                            for (int j = 0; j <= 8; j++) {
-                                TextView backLeftText = backLsitView.getChildAt(j).findViewById(R.id
-                                        .back_item_left_layout);
-                                TextView backRightText = backLsitView.getChildAt(j).findViewById
-                                        (R.id
-                                                .back_item_right_layout);
-                                String leftData1 = (String) backLeftText.getText();
-                                String rightData1 = (String) backRightText.getText();
-                                int leftChangeData1 = (int) (Float.valueOf(leftData1) * 10);
-                                int rightChangeData1 = (int) (Float.valueOf(rightData1) * 10);
-                                backLeftText.setText(leftChangeData1);
-                                backRightText.setText(rightChangeData1);
-                            }
-                        }*/
                         if (leftChangeData > 100000000) {
                             Toast.makeText(MainActivity.this, "已达到最大值，无法再右滑",
                                     Toast.LENGTH_SHORT).show();
+                            Vibrate();
                             return true;
                         }
-                      /*  FrontLeftTextview.setText(leftChangeData + "");
-                        FrontRightTextview.setText(rightChangeData + "");*/
-                        //frontListData.add(String.valueOf(leftChangeData));
-                        /*FrontRightTextview.setTranslationX(dx);*/
                     } else if (dx < dp2px(this, -20)) {
-                        /*     String leftData = (String) FrontLeftTextview.getText();*/
                         isLeft = false;
                         String leftData = (String) frontListAdapter.getItem(i);
-                        //frontListView.getChildAt(i).setTranslationX(dx);
                         int leftChangeData = (int) (Float.valueOf(leftData) / 10);
                         dataChange.add(String.valueOf(leftChangeData));
-                       /* String rightData = (String) FrontRightTextview.getText();
-                        long rightChangeData = (long) (Float.valueOf(rightData) / 10);*/
                         if (leftChangeData < 10) {
                             Toast.makeText(MainActivity.this, "已达到最小值，无法再左滑",
                                     Toast.LENGTH_SHORT).show();
+                            Vibrate();
                             return true;
                         }
-                       /* FrontLeftTextview.setText(leftChangeData + "");
-                        FrontRightTextview.setText(rightChangeData + "");*/
-                        /*FrontRightTextview.setTranslationX(dx);*/
                     } else {
                         frontListAdapter.Animation();
                         return true;
@@ -571,29 +537,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 frontListData.addAll(dataChange);
                 frontListAdapter.setX(dx);
                 frontListAdapter.setData(frontListData);
-                backListData.clear();
-                backListData.addAll(dataBackChange);
-                backListAdapter.setData(backListData);
-                if(isLeft){
-                    variable*=10;
-                }else{
-                    variable/=10;
+                if (isLeft) {
+                    Vibrate();
+                    variable *= 10;
+                } else {
+                    Vibrate();
+                    variable /= 10;
                 }
-
             }
         } else if (ev.getAction() == MotionEvent.ACTION_UP) {
             int movex = (int) ev.getRawX();
             int dx = movex - startx;
-                /*ViewGroup LeftView = (ViewGroup) frontListView.getChildAt(i);
-                ViewGroup RightView = (ViewGroup) frontListView.getChildAt(i);
-                TextView FrontLeftTextview = LeftView.findViewById(R.id.front_item_left_layout);
-                TextView FrontRightTextview = RightView.findViewById(R.id
-                .front_item_right_layout);*/
             if (Math.abs(dx) != 0) {
                 return true;
             }
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    public void Vibrate() {
+        Vibrator vibrator = (Vibrator) this.getSystemService(this.VIBRATOR_SERVICE);
+        vibrator.vibrate(100);
     }
 
     public static int dp2px(Context context, float dipValue) {
@@ -608,12 +572,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setGuideView() {
-
-
         remindRight.setVisibility(View.VISIBLE);
         remindRightText.setVisibility(View.VISIBLE);
         rightFinshButton.setVisibility(View.VISIBLE);
-
 
         leftFinshButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -624,8 +585,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 remindCenter.setVisibility(View.VISIBLE);
                 remindCenterText.setVisibility(View.VISIBLE);
                 centerFinshButton.setVisibility(View.VISIBLE);
-
-
             }
         });
         rightFinshButton.setOnClickListener(new View.OnClickListener() {
@@ -637,7 +596,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 rightFinshButton.setVisibility(View.GONE);
                 remindRight.setVisibility(View.GONE);
                 remindRightText.setVisibility(View.GONE);
-
             }
         });
         centerFinshButton.setOnClickListener(new View.OnClickListener() {

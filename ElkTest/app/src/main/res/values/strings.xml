@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">ElkTest</string>
+
+    <string-array name="currency_values">
+        <item>%s%s0</item>
+        <item>2%s%s0.00</item>
+        <item>4%s%s0.0000</item>
+        <item>6%s%s0.000000</item>
+        <item>8%s%s0.00000000</item>
+    </string-array>
+
+    <string name="none">None</string>
+    <string name="bits">Bits</string>
 </resources>

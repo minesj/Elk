@@ -1,4 +1,4 @@
-package com.example.qqz.elktest.View;
+package com.example.qqz.elktest.view;
 
 import android.app.Activity;
 import android.content.Context;

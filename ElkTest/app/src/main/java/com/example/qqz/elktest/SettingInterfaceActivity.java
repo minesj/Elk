@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.example.qqz.elktest.R;
+
 public class SettingInterfaceActivity extends AppCompatActivity {
 
     private ImageButton CloseButton;

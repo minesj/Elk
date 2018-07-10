@@ -1,4 +1,4 @@
-package com.example.qqz.elktest.Adapter;
+package com.example.qqz.elktest.adapter;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -113,4 +113,6 @@ public class FrontListAdapter extends BaseAdapter {
         animatorleft.setDuration(500);
         animatorleft.start();
     }
+
+
 }

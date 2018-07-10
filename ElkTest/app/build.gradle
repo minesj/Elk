@@ -61,6 +61,6 @@ MobSDK {
                 shareByAppClient true
                 bypassApproval false
             }
+        }
     }
 }
-    }

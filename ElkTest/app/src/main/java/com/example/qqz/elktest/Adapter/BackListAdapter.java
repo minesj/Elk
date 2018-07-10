@@ -1,4 +1,4 @@
-package com.example.qqz.elktest.Adapter;
+package com.example.qqz.elktest.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;

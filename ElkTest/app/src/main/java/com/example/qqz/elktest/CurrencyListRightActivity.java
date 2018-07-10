@@ -10,7 +10,7 @@ public class CurrencyListRightActivity extends CurrencyListLeftActivity {
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         int resultCode =2;
-        String RightText = stickyList.getItemAtPosition(position).toString();
+        String RightText = sectionListAdapter.getItem(position).getSymbol();
         Intent data = new Intent();
         data.putExtra("RightTextView", RightText);
         setResult(resultCode, data);

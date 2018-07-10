@@ -1,15 +1,22 @@
-package com.example.qqz.elktest.Adapter;
+package com.example.qqz.elktest.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.SectionIndexer;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.qqz.elktest.Currency;
 import com.example.qqz.elktest.R;
+import com.example.qqz.elktest.currencylist.Currency;
+
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,158 +25,107 @@ import java.util.Set;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
-public class CurrencyListAdapter extends BaseAdapter implements StickyListHeadersAdapter,
-        SectionIndexer{
+public class CurrencyListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
+    private static final String TAG = "SectionListAdapter";
 
-    private final Context mContext;
-    private String[] mCurrencyList;
-    private int[] mSectionIndices;
-    private Character[] mSectionLetters;
-    private LayoutInflater mInflater;
+    private Context context;
+    private LayoutInflater inflater;
+    private List<Currency> currencyList = new ArrayList<>();
+    private Set<Integer> sectionStartIndexSet = new HashSet<>();
+    private Typeface headerTypeface;
 
     public CurrencyListAdapter(Context context) {
-        mContext =context;
-        mInflater = LayoutInflater.from(context);
-        mCurrencyList = context.getResources().getStringArray(R.array.currency_list);
-        mSectionIndices = getSectionIndices();
-        mSectionLetters = getSectionLetters();
+        this.context = context;
+        this.inflater = LayoutInflater.from(context);
+        this.headerTypeface = Typeface.createFromAsset(context.getAssets(), "roboto-bold.ttf");
+    }
+
+    @Override
+    public View getHeaderView(int position, View convertView, ViewGroup parent) {
+        Log.d(TAG, String.format("getHeaderView, position: %d", position));
+        View origConvertView = convertView;
+        ViewHolder holder;
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.currency_section_list_item, parent, false);
+            holder = new ViewHolder();
+            holder.dividerPlaceholderLayout =
+                    convertView.findViewById(R.id.divider_placeholder_layout);
+            holder.headerLayout = convertView.findViewById(R.id.header_layout);
+            holder.headerText = convertView.findViewById(R.id.header_text);
+            holder.headerText.setTypeface(headerTypeface);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+        if (sectionStartIndexSet.contains(position)) {
+            holder.dividerPlaceholderLayout.setVisibility(View.VISIBLE);
+            holder.headerLayout.setVisibility(View.VISIBLE);
+        } else if (origConvertView == null) {
+            holder.dividerPlaceholderLayout.setVisibility(View.VISIBLE);
+            holder.headerLayout.setVisibility(View.GONE);
+        } else {
+            holder.dividerPlaceholderLayout.setVisibility(View.VISIBLE);
+            holder.headerLayout.setVisibility(View.VISIBLE);
+        }
+        String section = currencyList.get(position).getSection(context);
+        if (section.equals(Currency.SECTION_FAV)) {
+            holder.headerText.setVisibility(View.VISIBLE);
+            holder.headerText.setText("常用");
+        } else {
+            holder.headerText.setVisibility(View.VISIBLE);
+            holder.headerText.setText(section.toUpperCase().charAt(0) + "");
+        }
+        return convertView;
+    }
+
+    @Override
+    public long getHeaderId(int position) {
+        Currency currency = currencyList.get(position);
+        return currency.getSection(context).charAt(0);
     }
 
     @Override
     public int getCount() {
-        return mCurrencyList.length;
+        return currencyList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mCurrencyList[position];
+        return null;
     }
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return 0;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-
         if (convertView == null) {
+            convertView = inflater.inflate(R.layout.currency_section_list_item, parent, false);
             holder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.currencylist_item, parent, false);
-            holder.text = convertView.findViewById(R.id.text);
+            holder.dividerPlaceholderLayout =
+                    convertView.findViewById(R.id.divider_placeholder_layout);
+            holder.headerLayout = convertView.findViewById(R.id.header_layout);
+            holder.headerText = convertView.findViewById(R.id.header_text);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
-        holder.text.setText(mCurrencyList[position]);
-
-        return convertView;
-    }
-
-
-
-    class ViewHolder {
-        TextView text;
-    }
-
-    @Override
-    public View getHeaderView(int position, View convertView, ViewGroup parent) {
-        HeaderViewHolder holder;
-
-        if (convertView == null) {
-            holder = new HeaderViewHolder();
-            convertView = mInflater.inflate(R.layout.currencylist_headers, parent, false);
-            holder.text = convertView.findViewById(R.id.text1);
-            convertView.setTag(holder);
+        Currency currency = (Currency) getItem(position);
+        holder.headerText.setText(currencyList.get(position).getName(currency.getSymbol()));
+        if (sectionStartIndexSet.contains(position)) {
+            holder.headerLayout.setVisibility(View.GONE);
+            holder.dividerPlaceholderLayout.setVisibility(View.GONE);
         } else {
-            holder = (HeaderViewHolder) convertView.getTag();
+            holder.dividerPlaceholderLayout.setVisibility(View.GONE);
+            holder.headerLayout.setVisibility(View.VISIBLE);
         }
-
-
-        CharSequence headerChar = mCurrencyList[position].subSequence(0, 1);
-        holder.text.setText(headerChar);
-
         return convertView;
     }
-    class HeaderViewHolder {
-        TextView text;
-    }
 
-    @Override
-    public long getHeaderId(int position) {
-        return mCurrencyList[position].subSequence(0, 1).charAt(0);
-    }
-
-    @Override
-    public Object[] getSections() {
-        return mSectionLetters;
-    }
-
-    @Override
-    public int getPositionForSection(int sectionIndex) {
-        if (mSectionIndices.length == 0) {
-            return 0;
-        }
-
-        if (sectionIndex >= mSectionIndices.length) {
-            sectionIndex = mSectionIndices.length - 1;
-        } else if (sectionIndex < 0) {
-            sectionIndex = 0;
-        }
-        return mSectionIndices[sectionIndex];
-    }
-
-    @Override
-    public int getSectionForPosition(int position) {
-        for (int i = 0; i < mSectionIndices.length; i++) {
-            if (position < mSectionIndices[i]) {
-                return i - 1;
-            }
-        }
-        return mSectionIndices.length - 1;
-    }
-
-    public int[] getSectionIndices() {
-        ArrayList<Integer> sectionIndices = new ArrayList<Integer>();
-        char lastFirstChar = mCurrencyList[0].charAt(0);
-        sectionIndices.add(0);
-        for (int i = 1; i < mCurrencyList.length; i++) {
-            if (mCurrencyList[i].charAt(0) != lastFirstChar) {
-                lastFirstChar = mCurrencyList[i].charAt(0);
-                sectionIndices.add(i);
-            }
-        }
-        int[] sections = new int[sectionIndices.size()];
-        for (int i = 0; i < sectionIndices.size(); i++) {
-            sections[i] = sectionIndices.get(i);
-        }
-        return sections;
-    }
-
-    public Character[] getSectionLetters() {
-        Character[] letters = new Character[mSectionIndices.length];
-        for (int i = 0; i < mSectionIndices.length; i++) {
-            letters[i] = mCurrencyList[mSectionIndices[i]].charAt(0);
-        }
-        return letters;
-    }
-
-    public void clear() {
-        mCurrencyList = new String[0];
-        mSectionIndices = new int[0];
-        mSectionLetters = new Character[0];
-        notifyDataSetChanged();
-    }
-
-    public void restore() {
-        mCurrencyList = mContext.getResources().getStringArray(R.array.currency_list);
-        mSectionIndices = getSectionIndices();
-        mSectionLetters = getSectionLetters();
-        notifyDataSetChanged();
-    }
-  /*  public void setData(List<Currency> currencyList, Set<Integer> sectionStartIndexSet) {
+    public void setData(List<Currency> currencyList, Set<Integer> sectionStartIndexSet) {
         if (currencyList == null) {
             currencyList = new ArrayList<>();
         }
@@ -179,6 +135,12 @@ public class CurrencyListAdapter extends BaseAdapter implements StickyListHeader
         this.currencyList = currencyList;
         this.sectionStartIndexSet = sectionStartIndexSet;
         this.notifyDataSetChanged();
-    }*/
+    }
 
+
+    private static final class ViewHolder {
+        private RelativeLayout dividerPlaceholderLayout;
+        private RelativeLayout headerLayout;
+        private TextView headerText;
+    }
 }
